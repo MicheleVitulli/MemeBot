@@ -14,7 +14,7 @@ chat_id = 0000#your chat id
 
 @bot.message_handler(commands=['start'])
 def start(message):
-  bot.reply_to(message, "Ciao, il memino giornaliero dovrebbe arrivare alle 10:30 del mattino")
+  bot.reply_to(message, "Welcome")
 
 
 
@@ -37,7 +37,7 @@ def function_to_run():
     with urllib.request.urlopen(url_2) as url2:
       response = json.loads(url2.read().decode())
 
-    bot.send_message(chat_id,"🤖: Ecco il tuo memino giornaliero, Titolo:")
+    bot.send_message(chat_id,"This is your daily meme, Title:")
     bot.send_message(chat_id,"\""+f.entries[0].title+"\"")
     print(response)
 

@@ -8,13 +8,13 @@ import json
 import urllib.request
 
 
-TOKEN = "Your token"
+TOKEN = #YourToken
 bot = telebot.TeleBot(TOKEN)
-chat_id = 0000#your chat id
+chat_id = #yourchat_ID
 
 @bot.message_handler(commands=['start'])
 def start(message):
-  bot.reply_to(message, "Welcome")
+  bot.reply_to(message, "Ciao, il memino giornaliero dovrebbe arrivare alle 10:30 del mattino")
 
 
 
@@ -31,15 +31,17 @@ def function_to_run():
 
 
     url_2 = f.entries[0].link+".json"
+    print(url_2)
+
 
 
 
     with urllib.request.urlopen(url_2) as url2:
       response = json.loads(url2.read().decode())
 
-    bot.send_message(chat_id,"This is your daily meme, Title:")
+    bot.send_message(chat_id,"🤖: Ecco il tuo memino giornaliero, Titolo:")
     bot.send_message(chat_id,"\""+f.entries[0].title+"\"")
-    print(response)
+
 
     try:
       response[0]['data']['children'][0]['data']['preview']['images'][0]['variants']['mp4']['source']['url']
@@ -47,7 +49,8 @@ def function_to_run():
       try:
         response[0]['data']['children'][0]['data']['secure_media']['reddit_video']['fallback_url']
       except:
-        bot.send_photo(chat_id,f.entries[0].media_thumbnail[0]["url"])
+        print("foto")
+        bot.send_photo(chat_id,response[0]['data']['children'][0]['data']['url_overridden_by_dest'])
       else:
         bot.send_video(chat_id,response[0]['data']['children'][0]['data']['secure_media']['reddit_video']['fallback_url'])
     else:
@@ -61,10 +64,11 @@ def function_to_run():
 if __name__ == "__main__":
     # Create the job in schedule.
     function_to_run()
-    '''with this you can schedule the script 
-    schedule.every(1).minutes.do(function_to_run)'''
+    '''schedule.every(1).minutes.do(function_to_run)'''
 
+    # Spin up a thread to run the schedule check so it doesn't block your bot.
+    # This will take the function schedule_checker which will check every second
+    # to see if the scheduled job needs to be ran.
     Thread(target=schedule_checker).start()
-    bot.polling()
-
+    #bot.polling()
 
